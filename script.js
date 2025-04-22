@@ -1,4 +1,5 @@
 async function checkBreach() {
+  console.log("Checking breach for:", input);
   const input = document.getElementById("userInput").value.toLowerCase().trim();
   const resultBox = document.getElementById("resultBox");
   const resultHeader = document.getElementById("resultHeader");
