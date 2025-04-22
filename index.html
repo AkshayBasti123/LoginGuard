@@ -1,1 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login Guard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Login Guard</h1>
+    <p>Check if your email or username has been involved in a known data breach.</p>
 
+    <input type="text" id="userInput" placeholder="Enter your email or username..." />
+    <button onclick="checkBreach()">Check</button>
+
+    <div id="resultBox" class="hidden">
+      <h2 id="resultHeader"></h2>
+      <p id="breachDetails"></p>
+      <ul id="recommendations"></ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
