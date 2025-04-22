@@ -7,6 +7,7 @@ async function sha1(str) {
     .toUpperCase();
 }
 
+
 async function checkPassword() {
   const password = document.getElementById("passwordInput").value;
   if (!password) {
