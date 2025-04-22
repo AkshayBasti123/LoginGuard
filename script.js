@@ -1,38 +1,29 @@
-async function checkBreach() {
-  console.log("Checking breach for:", input);
-  const input = document.getElementById("userInput").value.toLowerCase().trim();
-  const resultBox = document.getElementById("resultBox");
-  const resultHeader = document.getElementById("resultHeader");
-  const breachDetails = document.getElementById("breachDetails");
-  const recommendations = document.getElementById("recommendations");
+async function sha1(str) {
+  const buffer = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest("SHA-1", buffer);
+  return Array.from(new Uint8Array(hash))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase();
+}
 
-  if (!input) return alert("Please enter a username or email.");
-
-  const response = await fetch("data/breach-sim.json");
-  const breachDB = await response.json();
-
-  resultBox.classList.remove("hidden");
-  recommendations.innerHTML = "";
-
-  if (breachDB[input]) {
-    const count = breachDB[input].length;
-    resultHeader.innerHTML = `🔴 Leaked in ${count} breach${count > 1 ? "es" : ""}!`;
-    breachDetails.innerHTML = `Breaches found: ${breachDB[input].join(", ")}`;
-
-    const tips = [
-      "🔐 Change your passwords immediately.",
-      "🧠 Use a password manager like Bitwarden or 1Password.",
-      "🛡️ Enable Two-Factor Authentication.",
-      "🚫 Avoid reusing passwords across sites."
-    ];
-    tips.forEach(tip => {
-      const li = document.createElement("li");
-      li.textContent = tip;
-      recommendations.appendChild(li);
-    });
-  } else {
-    resultHeader.innerHTML = "✅ No breaches found!";
-    breachDetails.innerHTML = "Your credentials were not found in the simulated database.";
+async function checkPassword() {
+  const password = document.getElementById("passwordInput").value;
+  if (!password) {
+    document.getElementById("result").textContent = "Please enter a password.";
+    return;
   }
-  const response = await fetch("data/breach-sim.json");
+
+  const hash = await sha1(password);
+  const prefix = hash.substring(0, 5);
+  const suffix = hash.substring(5);
+
+  const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+  const text = await response.text();
+
+  const found = text.split("\n").some(line => line.split(":")[0] === suffix);
+
+  document.getElementById("result").textContent = found
+    ? "⚠️ This password has been found in a breach. Please change it!"
+    : "✅ This password has not been found in any breaches.";
 }
