@@ -33,4 +33,5 @@ async function checkBreach() {
     resultHeader.innerHTML = "✅ No breaches found!";
     breachDetails.innerHTML = "Your credentials were not found in the simulated database.";
   }
+  const response = await fetch("data/breach-sim.json");
 }
